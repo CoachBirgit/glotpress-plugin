@@ -31,10 +31,30 @@ if ( !class_exists( 'GlotPress' ) ) :
  */
 final class GlotPress {
 
+	/** Magic *****************************************************************/
+
+	/**
+	 * GlotPress uses many variables, several of which can be filtered to
+	 * customize the way it operates. Most of these variables are stored in a
+	 * private array that gets updated with the help of PHP magic methods.
+	 *
+	 * This is a precautionary measure, to avoid potential errors produced by
+	 * unanticipated direct manipulation of GlotPress's run-time data.
+	 *
+	 * @see GlotPress::setup_globals()
+	 * @var array
+	 */
+	private $data;
+
 	/**
 	 * @var GlotPress The one true GlotPress
 	 */
 	private static $instance;
+
+	/**
+	 * @var array Redirect notices
+	 */
+	public static $redirect_notices = array();
 
 	/**
 	 * Main GlotPress Instance
@@ -153,8 +173,8 @@ final class GlotPress {
 		$this->lang_dir     = apply_filters( 'gp_lang_dir',     trailingslashit( $this->plugin_dir . 'languages' ) );
 
 		// Templates
-		$this->themes_dir   = apply_filters( 'gp_themes_dir',   trailingslashit( $this->plugin_dir . 'templates' ) );
-		$this->themes_url   = apply_filters( 'gp_themes_url',   trailingslashit( $this->plugin_url . 'templates' ) );
+		$this->themes_dir   = apply_filters( 'gp_themes_dir',   trailingslashit( $this->plugin_dir . 'themes' ) );
+		$this->themes_url   = apply_filters( 'gp_themes_url',   trailingslashit( $this->plugin_url . 'themes' ) );
 
 		/** Misc **************************************************************/
 
@@ -174,7 +194,8 @@ final class GlotPress {
 	 * @uses is_admin() If in WordPress admin, load additional file
 	 */
 	private function includes() {
-
+		require( $this->plugin_dir . 'includes/misc.php' );
+		require( $this->plugin_dir . 'includes/template.php' );
 	}
 
 	/**
@@ -185,7 +206,8 @@ final class GlotPress {
 	 * @uses add_action() To add various actions
 	 */
 	private function setup_actions() {
-		
+		// Setup the GlotPress theme directory
+		register_theme_directory( $this->themes_dir );
 	}
 
 }
