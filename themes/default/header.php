@@ -22,9 +22,9 @@
 
 				printf( __('Hi, %s.'), '<a href="' . esc_url( home_url( '/profile/' ) ) . '">' . $user->user_login . '</a>' );
 				?>
-				<a href="<?php echo wp_logout_url(); ?>"><?php _e('Log out'); ?></a>
+				<a href="<?php echo wp_logout_url( home_url() ); ?>"><?php _e('Log out'); ?></a>
 			<?php else: ?>
-				<strong><a href="<?php echo wp_login_url(); ?>"><?php _e('Log in'); ?></a></strong>
+				<strong><a href="<?php echo wp_login_url( home_url() ); ?>"><?php _e('Log in'); ?></a></strong>
 			<?php endif; ?>
 			<?php do_action( 'gp_after_hello' ); ?>
 			</span>
