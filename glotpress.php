@@ -196,6 +196,8 @@ final class GlotPress {
 	private function includes() {
 		require( $this->plugin_dir . 'includes/misc.php' );
 		require( $this->plugin_dir . 'includes/template.php' );
+		require( $this->plugin_dir . 'includes/router.php' );
+		require( $this->plugin_dir . 'includes/query.php' );
 	}
 
 	/**
@@ -208,6 +210,15 @@ final class GlotPress {
 	private function setup_actions() {
 		// Setup the GlotPress theme directory
 		register_theme_directory( $this->themes_dir );
+
+		// Rewrite rules
+		add_action( 'rewrite_rules_array', 'gp_rewrite_rules' );
+
+		// Query vars
+		add_action( 'query_vars', 'gp_query_vars' );
+
+		// Get data
+		add_action( 'pre_get_posts', 'gp_pre_get_posts', 1 );
 	}
 
 }
