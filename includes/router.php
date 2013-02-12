@@ -1,16 +1,27 @@
 <?php
 
+class GlotPress_Router {
+
 	/**
 	 * Set rewrite rules
 	 *
 	 * @since 0.1
 	 * @return New set of rewrite rules
+	 *
+	 * @see http://glotpress.trac.wordpress.org/browser/trunk/gp-includes/router.php
+	 *
+	 * @todo import get:/$project/-permissions/-delete/$dir and all $set stuff
 	 */
-	function gp_rewrite_rules( $current_rules = array() ) {
+	function rewrite_rules( $current_rules = array() ) {
 		$new_rules = array (
-			'^projects/?$'		 => 'index.php?gp_projects_home=1',
-			'^projects/([^/]+)/?$' => 'index.php?gp_projects=$matches[1]',
-			'^profile/([^/]+)/?$'  => 'index.php?gp_profile=$matches[1]'
+			'login/?$'  => 'index.php?glotpress=login',
+			'profile/?$'  => 'index.php?glotpress=profile',
+
+			'projects/([^/]+)/-mass-create-sets/preview/?$' => 'index.php?glotpress=project&gp_project=$matches[1]&gp_type=-mass-create-sets-preview',
+			'projects/([^/]+)/(import-originals|-edit|-delete|-personal-permissions|-mass-create-sets)/?$' => 'index.php?glotpress=project&gp_project=$matches[1]&gp_type=$matches[2]',
+			'projects/([^/]+)/?$' => 'index.php?glotpress=project&gp_project=$matches[1]',
+			'projects/-new/?$'		 => 'index.php?glotpress=project&gp_type=new',
+			'projects/?$'		 => 'index.php?glotpress=project'
 		);
 		return apply_filters( 'gp_rewrite_rules', $new_rules + $current_rules );
 	}
@@ -22,14 +33,12 @@
 	 * @uses gp_rewrite_rules() to get the query vars
 	 * @return New set of query vars
 	 */
-	function gp_query_vars ( $current_vars ) {
-		$new_vars = array();
-		$rules = gp_rewrite_rules();
-		foreach( $rules as $rule ) {
-			parse_str( preg_replace( '/.+\?/', '', $rule ), $vars);
-			$new_vars = array_merge( $new_vars, array_keys( $vars ) );
-		}
-		return apply_filters( 'gp_query_vars', $new_vars );
+	function query_vars( $vars ) {
+		$vars[] = 'glotpress';
+		$vars[] = 'gp_type';
+		$vars[] = 'gp_project';
+		
+		return $vars;
 	}
 
 	/**
@@ -37,16 +46,15 @@
 	 *
 	 * @since 0.1
 	 */
-	function gp_pre_get_posts() {
-
-		if( get_query_var( 'gp_projects_home' ) )
-			return gp_projects_home();
-
-		elseif( $project = get_query_var( 'gp_projects' ) )
-			return gp_project( $project );
-
-		elseif( $profile = get_query_var( 'gp_profile' ) )
-			return gp_profile( $profile );
-
+	function pre_get_posts() {
+		if( 'project' == get_query_var( 'glotpress' ) ) {
+			if( $project = get_query_var( 'gp_project' ) )
+				return gp_project( $project );
+			else
+				gp_projects_home();
+		}
+		elseif( 'profile' == get_query_var( 'glotpress' ) )
+			return gp_profile();
 	}
+}
 ?>
