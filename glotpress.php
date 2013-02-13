@@ -212,13 +212,13 @@ final class GlotPress {
 		register_theme_directory( $this->themes_dir );
 
 		// Rewrite rules
-		add_action( 'rewrite_rules_array', 'gp_rewrite_rules' );
+		add_action( 'rewrite_rules_array', array( 'GlotPress_Router', 'rewrite_rules' ) );
 
 		// Query vars
-		add_action( 'query_vars', 'gp_query_vars' );
+		add_action( 'query_vars', array( 'GlotPress_Router', 'query_vars' ) );
 
 		// Get data
-		add_action( 'pre_get_posts', 'gp_pre_get_posts', 1 );
+		add_action( 'pre_get_posts', array( 'GlotPress_Router', 'pre_get_posts' ), 1 );
 	}
 
 }
