@@ -196,6 +196,7 @@ final class GlotPress {
 	private function includes() {
 		require( $this->plugin_dir . 'includes/misc.php' );
 		require( $this->plugin_dir . 'includes/template.php' );
+		require( $this->plugin_dir . 'includes/locales.php' );
 		require( $this->plugin_dir . 'includes/router.php' );
 		require( $this->plugin_dir . 'includes/query.php' );
 	}
