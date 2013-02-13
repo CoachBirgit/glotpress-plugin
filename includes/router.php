@@ -16,36 +16,19 @@ class GlotPress_Router {
 	function rewrite_rules( $current_rules = array() ) {
 		$dir = '([^_/][^/]*)';
 		$path = '(.+?)';
-		$project = $path;
-		$project_match = 'gp_project=$matches[1]';
+		$projects = 'projects';
+		$project = "$projects/$path";
 		$id = '(\d+)';
 		$locale = '('.implode('|', array_map( create_function( '$x', 'return $x->slug;' ), GP_Locales::locales() ) ).')';
 		$set = "$project/$locale/$dir";
-		$set_match = 'gp_project=$matches[1]&gp_locale=$matches[2]&gp_type=$matches[3]';
 		$new_rules = array (
-
-			"new?" => 'index.php?gp_action=new_get',
-			"new/post/?" => 'index.php?gp_action=new_post',
-
-			'profile/?$' => 'index.php?gp_action=profile_get',
-			'profile/post/?$' => 'index.php?gp_action=profile_post',
-			"profile/$dir/?$" => 'index.php?gp_action=profile_get&gp_profile=$matches[1]',
-
-			"$project/import-originals/?" => "index.php?gp_action=import_originals_get&$project_match",
-			"$project/import-originals/post/?" => "index.php?gp_action=import_originals_post&$project_match",
-
-			"$project/edit/?" => "index.php?gp_action=edit_get&$project_match",
-			"$project/edit/post/?" => "index.php?gp_action=edit_post&$project_match",
-
-			"$project/delete/?" => "index.php?gp_action=delete_get&$project_match",
-			"$project/delete/post/?" => "index.php?gp_action=delete_post&$project_match",
-
-			"$project/permissions/?" => "index.php?gp_action=permissions_get&$project_match",
-			"$project/permissions/post/?" => "index.php?gp_action=permissions_post&$project_match",
-
-			"$set/?" => "index.php?gp_action=set_get&$set_match",
-			"$set/post/?" => "index.php?gp_action=set_post&$set_match"
-
+			'profile/?$' => 'index.php?gp_profile=1',
+			"profile/$dir/?$" => 'index.php?gp_profile=$matches[1]',
+			"$project/(import-originals|-edit|-delete|-personal|-permissions|-mass-create-sets|-mass-create-sets/preview|-new)/?$" => 'index.php?gp_project=$matches[1]&gp_action=$matches[2]',
+			"$projects/?$" => "index.php?gp_project=project&gp_action=index",
+			"$set/(-bulk|import-translations|-discard-warning|-set-status|export-translations)/?$" => 'index.php?gp_project=$matches[1]&gp_locale=$matches[2]&gp_type=$matches[3]&gp_action=$matches[4]',
+			"$set/?$" => 'index.php?gp_set=set&gp_project=$matches[1]&gp_locale=$matches[2]&gp_type=$matches[3]',
+			"$project/?$" => 'index.php?gp_project=$matches[1]&gp_action=single'
 		);
 		return apply_filters( 'gp_rewrite_rules', $new_rules + $current_rules );
 	}
@@ -61,6 +44,7 @@ class GlotPress_Router {
 		$vars[] = 'gp_action';
 		$vars[] = 'gp_project';
 		$vars[] = 'gp_profile';
+		$vars[] = 'gp_set';
 		$vars[] = 'gp_locale';
 		return $vars;
 	}
@@ -73,29 +57,18 @@ class GlotPress_Router {
 	 * @todo all other matches
 	 */
 	function pre_get_posts() {
-		switch( get_query_var( 'gp_action' ) ) {
-
-			case 'profile_get' :
-			break;
-
-			case 'profile_post' :
-			break;
-
-			case 'new_get' :
-			break;
-
-			case 'new_post' :
-			break;
-
-			case 'import_originals_get' :
-			break;
-
-			case 'import_originals_post' :
-			break;
-
-			case 'set_get' :
-			break;
-
+		if( get_query_var( 'gp_set' ) ) {
+			return gp_set( get_query_var( 'gp_project' ),
+				get_query_var( 'gp_locale' ),
+				get_query_var( 'gp_type' ),
+				get_query_var( 'gp_action' ) );
+		}
+		elseif( get_query_var( 'gp_project' ) ) {
+			return gp_project( get_query_var( 'gp_project' ),
+				get_query_var( 'gp_action' ) );
+		}
+		elseif( get_query_var( 'gp_profile' ) ) {
+			return gp_profile( get_query_var( 'gp_profile' ) );
 		}
 	}
 }
