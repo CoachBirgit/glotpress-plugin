@@ -79,7 +79,7 @@ class GlotPress_Router {
 		if( 'profile' == get_query_var( 'gp_action' ) )
 			return get_stylesheet_directory() . '/profile.php';
 
-		return $template_include;
+		return $template;
 	}
 
 	/**
