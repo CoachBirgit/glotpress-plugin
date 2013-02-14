@@ -10,7 +10,7 @@
 		return;
 	}
 
-	function gp_profile( $profile ) {
+	function gp_profile() {
 		return;
 	}
 

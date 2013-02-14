@@ -22,8 +22,7 @@ class GlotPress_Router {
 		$locale = '('.implode('|', array_map( create_function( '$x', 'return $x->slug;' ), GP_Locales::locales() ) ).')';
 		$set = "$project/$locale/$dir";
 		$new_rules = array (
-			'profile/?$' => 'index.php?gp_profile=1',
-			"profile/$dir/?$" => 'index.php?gp_profile=$matches[1]',
+			'profile/?$' => 'index.php?gp_action=profile',
 			"$project/(import-originals|-edit|-delete|-personal|-permissions|-mass-create-sets|-mass-create-sets/preview|-new)/?$" => 'index.php?gp_project=$matches[1]&gp_action=$matches[2]',
 			"$projects/?$" => "index.php?gp_project=project&gp_action=index",
 			"$set/(-bulk|import-translations|-discard-warning|-set-status|export-translations)/?$" => 'index.php?gp_project=$matches[1]&gp_locale=$matches[2]&gp_type=$matches[3]&gp_action=$matches[4]',
@@ -43,7 +42,6 @@ class GlotPress_Router {
 	function query_vars( $vars ) {
 		$vars[] = 'gp_action';
 		$vars[] = 'gp_project';
-		$vars[] = 'gp_profile';
 		$vars[] = 'gp_set';
 		$vars[] = 'gp_locale';
 		return $vars;
@@ -67,8 +65,8 @@ class GlotPress_Router {
 			return gp_project( get_query_var( 'gp_project' ),
 				get_query_var( 'gp_action' ) );
 		}
-		elseif( get_query_var( 'gp_profile' ) ) {
-			return gp_profile( get_query_var( 'gp_profile' ) );
+		elseif( 'profile' == get_query_var( 'gp_action' ) ) {
+			return gp_profile();
 		}
 	}
 }
