@@ -213,13 +213,19 @@ final class GlotPress {
 		register_theme_directory( $this->themes_dir );
 
 		// Rewrite rules
-		add_action( 'rewrite_rules_array', array( 'GlotPress_Router', 'rewrite_rules' ) );
+		add_filter( 'rewrite_rules_array', array( 'GlotPress_Router', 'rewrite_rules' ) );
 
 		// Query vars
-		add_action( 'query_vars', array( 'GlotPress_Router', 'query_vars' ) );
+		add_filter( 'query_vars', array( 'GlotPress_Router', 'query_vars' ) );
 
 		// Get data
 		add_action( 'pre_get_posts', array( 'GlotPress_Router', 'pre_get_posts' ), 1 );
+
+		// Switch template
+		add_filter( 'template_include', array( 'GlotPress_Router', 'template_include' ), 1 );
+
+		// Switch template
+		add_filter( 'wp_title', array( 'GlotPress_Router', 'wp_title' ), 1 );
 	}
 
 }

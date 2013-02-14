@@ -69,5 +69,28 @@ class GlotPress_Router {
 			return gp_profile();
 		}
 	}
+
+	/**
+	 * Loads the correct template based on the visitor's url
+	 *
+	 * @since 0.1
+	 */
+	function template_include( $template ) {
+		if( 'profile' == get_query_var( 'gp_action' ) )
+			return get_stylesheet_directory() . '/profile.php';
+
+		return $template_include;
+	}
+
+	/**
+	 * Change the page title for all GlotPress areas.
+	 *
+	 * @since 0.1
+	 */
+	function wp_title( $title ) {
+		if( 'profile' == get_query_var( 'gp_action' ) )
+			return 'Profile &lt; GlotPress';
+	}
+
 }
 ?>
