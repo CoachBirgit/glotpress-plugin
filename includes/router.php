@@ -65,6 +65,10 @@ class GlotPress_Router {
 			return gp_project( get_query_var( 'gp_project' ),
 				get_query_var( 'gp_action' ) );
 		}
+		else if( 'profile' == get_query_var( 'gp_action' ) && ! is_user_logged_in() ) {
+			$query->set_404();
+			status_header( 404 );
+		}
 	}
 
 	/**
@@ -73,13 +77,9 @@ class GlotPress_Router {
 	 * @since 0.1
 	 */
 	function template_include( $template ) {
-		if( 'profile' == get_query_var( 'gp_action' ) ) {
-			if( is_user_logged_in() ) {
-				GlotPress_Profile::update_profile();
-				return get_stylesheet_directory() . '/profile.php';
-			}
-			else
-				return get_404_template();
+		if( 'profile' == get_query_var( 'gp_action' ) && is_user_logged_in() ) {
+			GlotPress_Profile::update_profile();
+			return get_stylesheet_directory() . '/profile.php';
 		}
 
 		return $template;
@@ -91,6 +91,9 @@ class GlotPress_Router {
 	 * @since 0.1
 	 */
 	function wp_title( $title, $sep, $seplocation ) {
+		if( is_404() )
+			return $title;
+
 		if( ! $sep )
 			$sep = '&lt;';
 
