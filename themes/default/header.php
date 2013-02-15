@@ -20,7 +20,7 @@
 			if ( is_user_logged_in() ):
 				$user = wp_get_current_user();
 
-				printf( __( 'Hi, %s.', 'glotpress' ), '<a href="' . esc_url( home_url( '/profile/' ) ) . '">' . $user->user_login . '</a>' );
+				printf( __( 'Hi, %s.', 'glotpress' ), '<a href="' . gp_profile_url() . '">' . $user->user_login . '</a>' );
 				?>
 				<a href="<?php echo wp_logout_url( home_url() ); ?>"><?php _e( 'Log out', 'glotpress' ); ?></a>
 			<?php else: ?>

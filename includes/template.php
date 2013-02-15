@@ -42,3 +42,13 @@ function gp_radio_buttons( $name, $radio_buttons, $checked_key ) {
 	}
 	return $res;
 }
+
+function gp_profile_url() {
+	if ( '' != get_option('permalink_structure') )
+		$url = esc_url( home_url( '/profile/' ) );
+	else
+		$url = esc_url( home_url( '/index.php?gp_action=profile' ) );
+
+	return apply_filters( 'gp_profile_url', $url );
+}
+
