@@ -24,7 +24,7 @@
 				?>
 				<a href="<?php echo wp_logout_url( home_url() ); ?>"><?php _e( 'Log out', 'glotpress' ); ?></a>
 			<?php else: ?>
-				<strong><a href="<?php echo wp_login_url( home_url() ); ?>"><?php _e( 'Log in', 'glotpress' ); ?></a></strong>
+				<strong><a href="<?php echo gp_login_url( home_url() ); ?>"><?php _e( 'Log in', 'glotpress' ); ?></a></strong>
 			<?php endif; ?>
 			<?php do_action( 'gp_after_hello' ); ?>
 			</span>

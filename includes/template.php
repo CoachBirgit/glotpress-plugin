@@ -40,8 +40,30 @@ function gp_radio_buttons( $name, $radio_buttons, $checked_key ) {
 		$res .= "\t<input type='radio' name='$name' value='".esc_attr( $value )."' $checked id='{$name}[{$value}]'/>&nbsp;";
 		$res .= "<label for='{$name}[{$value}]'>".esc_html( $label )."</label><br />\n";
 	}
+
 	return $res;
 }
+
+
+
+
+/*
+	@todo need check if login template exists. Otherwise use wp_login_url
+*/
+function gp_login_url( $redirect = '' ) {
+	if ( '' != get_option('permalink_structure') )
+		$url = esc_url( home_url( '/login/' ) );
+	else
+		$url = esc_url( home_url( '/index.php?gp_action=login' ) );
+
+	if ( ! empty( $redirect ) )
+		$url = add_query_arg( 'redirect_to', urlencode( $redirect ), $url );
+
+	$url = set_url_scheme( $url, 'login_post' );
+
+	return apply_filters( 'gp_login_url', $url, $redirect );
+}
+
 
 function gp_profile_url() {
 	if ( '' != get_option('permalink_structure') )

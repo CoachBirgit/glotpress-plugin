@@ -23,6 +23,8 @@ class GlotPress_Router {
 		$set = "$project/$locale/$dir";
 		$new_rules = array (
 			'profile/?$' => 'index.php?gp_action=profile',
+			'login/?$' => 'index.php?gp_action=login',
+
 			"$project/(import-originals|-edit|-delete|-personal|-permissions|-mass-create-sets|-mass-create-sets/preview|-new)/?$" => 'index.php?gp_project=$matches[1]&gp_action=$matches[2]',
 			"$projects/?$" => "index.php?gp_project=project&gp_action=index",
 			"$set/(-bulk|import-translations|-discard-warning|-set-status|export-translations)/?$" => 'index.php?gp_project=$matches[1]&gp_locale=$matches[2]&gp_type=$matches[3]&gp_action=$matches[4]',
@@ -81,6 +83,10 @@ class GlotPress_Router {
 			GlotPress_Profile::update_profile();
 			return get_stylesheet_directory() . '/profile.php';
 		}
+		else if( 'login' == get_query_var( 'gp_action' ) && ! is_user_logged_in() ) {
+			GlotPress_Login::check_login();
+			return get_stylesheet_directory() . '/login.php';
+		}
 
 		return $template;
 	}
@@ -99,6 +105,8 @@ class GlotPress_Router {
 
 		if( 'profile' == get_query_var( 'gp_action' ) )
 			return __( 'Profile', 'glotpress' ) . ' ' . $sep . ' ' . get_bloginfo('name');
+		else if( 'login' == get_query_var( 'gp_action' ) )
+			return __( 'Login', 'glotpress' ) . ' ' . $sep . ' ' . get_bloginfo('name');
 
 		return $title;
 	}

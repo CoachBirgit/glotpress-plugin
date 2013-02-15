@@ -75,6 +75,7 @@ final class GlotPress {
 			self::$instance = new GlotPress;
 			self::$instance->setup_globals();
 			self::$instance->includes();
+			self::$instance->initialize_classes();
 			self::$instance->setup_actions();
 		}
 		return self::$instance;
@@ -199,8 +200,22 @@ final class GlotPress {
 		require( $this->plugin_dir . 'includes/locales.php' );
 		require( $this->plugin_dir . 'includes/router.php' );
 		require( $this->plugin_dir . 'includes/query.php' );
+		require( $this->plugin_dir . 'includes/login.php' );
 
 		require( $this->plugin_dir . 'includes/profile.php' );
+	}
+
+	/**
+	 * Setup the classes
+	 *
+	 * @since 0.1
+	 * @access private
+	 */
+	private function initialize_classes() {
+		// Setup the GlotPress theme directory
+		register_theme_directory( $this->themes_dir );
+
+		new GlotPress_Login;
 	}
 
 	/**
@@ -211,9 +226,6 @@ final class GlotPress {
 	 * @uses add_action() To add various actions
 	 */
 	private function setup_actions() {
-		// Setup the GlotPress theme directory
-		register_theme_directory( $this->themes_dir );
-
 		// Rewrite rules
 		add_filter( 'rewrite_rules_array', array( 'GlotPress_Router', 'rewrite_rules' ) );
 
