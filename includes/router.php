@@ -76,8 +76,12 @@ class GlotPress_Router {
 	 * @since 0.1
 	 */
 	function template_include( $template ) {
-		if( 'profile' == get_query_var( 'gp_action' ) )
-			return get_stylesheet_directory() . '/profile.php';
+		if( 'profile' == get_query_var( 'gp_action' ) ) {
+			if( is_user_logged_in() )
+				return get_stylesheet_directory() . '/profile.php';
+			else
+				return get_404_template();
+		}
 
 		return $template;
 	}
