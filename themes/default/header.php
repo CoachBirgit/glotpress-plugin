@@ -12,7 +12,7 @@
 
 		<h1>
 			<a class="logo" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<img alt="<?php esc_attr( __('GlotPress logo') ); ?>" src="<?php echo get_template_directory_uri(); ?>/images/glotpress-logo.png" />
+				<img alt="<?php esc_attr( __( 'GlotPress logo', 'glotpress' ) ); ?>" src="<?php echo get_template_directory_uri(); ?>/images/glotpress-logo.png" />
 			</a>
 			<?php echo gp_breadcrumb(); ?>
 			<span id="hello">
@@ -20,11 +20,11 @@
 			if ( is_user_logged_in() ):
 				$user = wp_get_current_user();
 
-				printf( __('Hi, %s.'), '<a href="' . esc_url( home_url( '/profile/' ) ) . '">' . $user->user_login . '</a>' );
+				printf( __( 'Hi, %s.', 'glotpress' ), '<a href="' . esc_url( home_url( '/profile/' ) ) . '">' . $user->user_login . '</a>' );
 				?>
-				<a href="<?php echo wp_logout_url( home_url() ); ?>"><?php _e('Log out'); ?></a>
+				<a href="<?php echo wp_logout_url( home_url() ); ?>"><?php _e( 'Log out', 'glotpress' ); ?></a>
 			<?php else: ?>
-				<strong><a href="<?php echo wp_login_url( home_url() ); ?>"><?php _e('Log in'); ?></a></strong>
+				<strong><a href="<?php echo wp_login_url( home_url() ); ?>"><?php _e( 'Log in', 'glotpress' ); ?></a></strong>
 			<?php endif; ?>
 			<?php do_action( 'gp_after_hello' ); ?>
 			</span>
@@ -34,7 +34,7 @@
 		<div class="clear after-h1"></div>
 		<?php if ( gp_notice('error') ): ?>
 			<div class="error">
-				<?php echo gp_notice( 'error' ); //TODO: run kses on notices ?>
+				<?php echo gp_notice( 'error' ); ?>
 			</div>
 		<?php endif; ?>
 		<?php if ( gp_notice() ): ?>
@@ -43,3 +43,4 @@
 			</div>
 		<?php endif; ?>
 		<?php do_action( 'gp_after_notices' ); ?>
+

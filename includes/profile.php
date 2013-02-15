@@ -10,7 +10,7 @@ class GlotPress_Profile {
 			$default_sort = $_POST['default_sort'];
 			update_user_meta( get_current_user_id(), 'gp_default_sort', $default_sort );
 
-			gp_notice_set( __( 'Profile is updated' ) );
+			gp_notice_set( __( 'Profile is updated', 'glotpress' ) );
 		}
 	}
 }

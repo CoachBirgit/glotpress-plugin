@@ -95,7 +95,7 @@ class GlotPress_Router {
 			$sep = '&lt;';
 
 		if( 'profile' == get_query_var( 'gp_action' ) )
-			return __( 'Profile' ) . ' ' . $sep . ' ' . get_bloginfo('name');
+			return __( 'Profile', 'glotpress' ) . ' ' . $sep . ' ' . get_bloginfo('name');
 
 		return $title;
 	}
