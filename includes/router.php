@@ -65,9 +65,6 @@ class GlotPress_Router {
 			return gp_project( get_query_var( 'gp_project' ),
 				get_query_var( 'gp_action' ) );
 		}
-		elseif( 'profile' == get_query_var( 'gp_action' ) ) {
-			return gp_profile();
-		}
 	}
 
 	/**
@@ -77,8 +74,10 @@ class GlotPress_Router {
 	 */
 	function template_include( $template ) {
 		if( 'profile' == get_query_var( 'gp_action' ) ) {
-			if( is_user_logged_in() )
+			if( is_user_logged_in() ) {
+				GlotPress_Profile::update_profile();
 				return get_stylesheet_directory() . '/profile.php';
+			}
 			else
 				return get_404_template();
 		}
@@ -96,7 +95,7 @@ class GlotPress_Router {
 			$sep = '&lt;';
 
 		if( 'profile' == get_query_var( 'gp_action' ) )
-			return 'Profile ' . $sep . ' ' . get_bloginfo('name');
+			return __( 'Profile' ) . ' ' . $sep . ' ' . get_bloginfo('name');
 
 		return $title;
 	}

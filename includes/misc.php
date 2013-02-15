@@ -24,7 +24,7 @@ function gp_array_flatten( $array ) {
  * A key has one message. The default is 'notice'.
  */
 function gp_notice_set( $message, $key = 'notice' ) {
-	backpress_set_cookie( '_gp_notice_'.$key, $message, 0, gp_url_path() );
+	GlotPress::$redirect_notices[ $key ] = $message;
 }
 
 /**
@@ -34,17 +34,6 @@ function gp_notice_set( $message, $key = 'notice' ) {
  */
 function gp_notice( $key = 'notice' ) {
 	return isset( GlotPress::$redirect_notices[ $key ] )? GlotPress::$redirect_notices[ $key ] : '';
-}
-
-function gp_populate_notices() {
-	GP::$redirect_notices = array();
-	$prefix = '_gp_notice_';
-	foreach ($_COOKIE as $key => $value ) {
-		if ( gp_startswith( $key, $prefix ) && $suffix = substr( $key, strlen( $prefix ) )) {
-			GlotPress::$redirect_notices[$suffix] = $value;
-			backpress_set_cookie( $key, '', 0, gp_url_path() );
-		}
-	}
 }
 
 if ( !function_exists( 'gp_generate_password' ) ) :
