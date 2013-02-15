@@ -52,9 +52,9 @@ class GlotPress_Router {
 	 *
 	 * @since 0.1
 	 *
-	 * @todo all other matches
+	 * @todo all other matches and maybe pass the query along.
 	 */
-	function pre_get_posts() {
+	function pre_get_posts( $query ) {
 		if( get_query_var( 'gp_set' ) ) {
 			return gp_set( get_query_var( 'gp_project' ),
 				get_query_var( 'gp_locale' ),
