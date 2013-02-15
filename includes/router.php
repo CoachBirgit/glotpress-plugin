@@ -91,9 +91,14 @@ class GlotPress_Router {
 	 *
 	 * @since 0.1
 	 */
-	function wp_title( $title ) {
+	function wp_title( $title, $sep, $seplocation ) {
+		if( ! $sep )
+			$sep = '&lt;';
+
 		if( 'profile' == get_query_var( 'gp_action' ) )
-			return 'Profile &lt; GlotPress';
+			return 'Profile ' . $sep . ' ' . get_bloginfo('name');
+
+		return $title;
 	}
 
 }

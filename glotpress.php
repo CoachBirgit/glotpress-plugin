@@ -225,7 +225,7 @@ final class GlotPress {
 		add_filter( 'template_include', array( 'GlotPress_Router', 'template_include' ), 1 );
 
 		// Switch template
-		add_filter( 'wp_title', array( 'GlotPress_Router', 'wp_title' ), 1 );
+		add_filter( 'wp_title', array( 'GlotPress_Router', 'wp_title' ), 10, 3 );
 	}
 
 }
