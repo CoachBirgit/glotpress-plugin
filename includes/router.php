@@ -24,6 +24,7 @@ class GlotPress_Router {
 		$new_rules = array (
 			'profile/?$' => 'index.php?gp_action=profile',
 			'login/?$' => 'index.php?gp_action=login',
+			'register/?$' => 'index.php?gp_action=register',
 
 			"$project/(import-originals|-edit|-delete|-personal|-permissions|-mass-create-sets|-mass-create-sets/preview|-new)/?$" => 'index.php?gp_project=$matches[1]&gp_action=$matches[2]',
 			"$projects/?$" => "index.php?gp_project=project&gp_action=index",
@@ -76,6 +77,9 @@ class GlotPress_Router {
 		else if( 'profile' == get_query_var( 'gp_action' ) && ! is_user_logged_in() ) {
 			self::set_404( $query );
 		}
+		else if( 'register' == get_query_var( 'gp_action' ) && ( is_user_logged_in() || ! get_option('users_can_register') ) ) {
+			self::set_404( $query );
+		}
 	}
 
 	/**
@@ -102,6 +106,10 @@ class GlotPress_Router {
 		else if( 'login' == get_query_var( 'gp_action' ) ) {
 			GlotPress_Login::check_login();
 			return get_stylesheet_directory() . '/login.php';
+		}
+		else if( 'register' == get_query_var( 'gp_action' ) ) {
+			GlotPress_Login::check_register();
+			return get_stylesheet_directory() . '/register.php';
 		}
 
 		return $template;

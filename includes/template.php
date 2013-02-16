@@ -74,3 +74,41 @@ function gp_profile_url() {
 	return apply_filters( 'gp_profile_url', $url );
 }
 
+function gp_register_url() {
+	if ( '' != get_option('permalink_structure') )
+		$url = esc_url( home_url( '/register/' ) );
+	else
+		$url = esc_url( home_url( '/index.php?gp_action=register' ) );
+
+	return apply_filters( 'gp_register_url', $url );
+}
+
+
+/**
+ * Display the Registration link.
+ *
+ * Display a link which allows the user to navigate to the registration page if
+ * not logged in and registration is enabled.
+ *
+ * @since 1.5.0
+ * @uses apply_filters() Calls 'register' hook on register / admin link content.
+ *
+ * @param string $before Text to output before the link.
+ * @param string $after Text to output after the link.
+ * @param boolean $echo Default to echo and not return the link.
+ * @return string|null String when retrieving, null when displaying.
+ */
+function gp_register( $before = '', $after = '', $echo = true ) {
+	$link = '';
+
+	if ( ! is_user_logged_in() ) {
+		if ( get_option('users_can_register') )
+			$link = $before . '<a href="' . gp_register_url() . '">' . __( 'Register', 'glotpress' ) . '</a>' . $after;
+	}
+
+	if ( $echo )
+		echo apply_filters( 'gp_register', $link );
+	else
+		return apply_filters( 'gp_register', $link );
+}
+
