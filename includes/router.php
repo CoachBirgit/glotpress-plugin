@@ -57,6 +57,9 @@ class GlotPress_Router {
 	 * @todo all other matches and maybe pass the query along.
 	 */
 	function pre_get_posts( $query ) {
+		if( ! $query->is_main_query() )
+			return;
+
 		if( get_query_var( 'gp_set' ) ) {
 			return gp_set( get_query_var( 'gp_project' ),
 				get_query_var( 'gp_locale' ),
@@ -67,10 +70,23 @@ class GlotPress_Router {
 			return gp_project( get_query_var( 'gp_project' ),
 				get_query_var( 'gp_action' ) );
 		}
-		else if( 'profile' == get_query_var( 'gp_action' ) && ! is_user_logged_in() ) {
-			$query->set_404();
-			status_header( 404 );
+		else if( 'login' == get_query_var( 'gp_action' ) && is_user_logged_in() ) {
+			self::set_404( $query );
 		}
+		else if( 'profile' == get_query_var( 'gp_action' ) && ! is_user_logged_in() ) {
+			self::set_404( $query );
+		}
+	}
+
+	/**
+	 * Sets the 404 property, 404 header and cleans gp_action
+	 *
+	 * @since 2.0.0
+	 */
+	function set_404( $query ) {
+		$query->set( 'gp_action', '' );
+		$query->set_404();
+		status_header( 404 );
 	}
 
 	/**
@@ -79,11 +95,11 @@ class GlotPress_Router {
 	 * @since 0.1
 	 */
 	function template_include( $template ) {
-		if( 'profile' == get_query_var( 'gp_action' ) && is_user_logged_in() ) {
+		if( 'profile' == get_query_var( 'gp_action' ) ) {
 			GlotPress_Profile::update_profile();
 			return get_stylesheet_directory() . '/profile.php';
 		}
-		else if( 'login' == get_query_var( 'gp_action' ) && ! is_user_logged_in() ) {
+		else if( 'login' == get_query_var( 'gp_action' ) ) {
 			GlotPress_Login::check_login();
 			return get_stylesheet_directory() . '/login.php';
 		}
