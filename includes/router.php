@@ -62,7 +62,7 @@ class GlotPress_Router {
 		if( ! $query->is_main_query() )
 			return;
 
-		if( get_query_var( 'gp_project' ) && ! GlotPress_Query::projects() ) {
+		if( 'projects' == get_query_var( 'gp_action' ) && ! GlotPress_Query::projects() ) {
 			self::set_404( $query );
 		}
 		else if( 'login' == get_query_var( 'gp_action' ) && is_user_logged_in() ) {
@@ -94,7 +94,7 @@ class GlotPress_Router {
 	 * @since 0.1
 	 */
 	function template_include( $template ) {
-		if( get_query_var( 'gp_project' ) ) {
+		if( 'projects' == get_query_var( 'gp_action' ) ) {
 			global $projects;
 			$projects = GlotPress_Query::projects();
 
