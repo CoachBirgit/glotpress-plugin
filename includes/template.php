@@ -2,8 +2,8 @@
 
 function gp_breadcrumb( $args = array() ) {
 	$defaults = array(
-		'separator' => '<span class="separator">' . _x( '&rarr;', 'breadcrumb', 'glotpress' ) . '</span>',
-		'breadcrumb_before' => '<span class="breadcrumb"><span class="separator">' . _x( '&rarr;', 'breadcrumb', 'glotpress' ) . '</span>',
+		'separator' => '<span class="separator">'._x('&rarr;', 'breadcrumb').'</span>',
+		'breadcrumb_before' => '<span class="breadcrumb"><span class="separator">'._x('&rarr;', 'breadcrumb').'</span>',
 		'breadcrumb_after' => '</span>',
 	);
 	$args = array_merge( $defaults, $args );
@@ -78,35 +78,35 @@ function gp_radio_buttons( $name, $radio_buttons, $checked_key ) {
 */
 function gp_login_url( $redirect = '' ) {
 	if ( '' != get_option('permalink_structure') )
-		$url = esc_url( home_url( '/login/' ) );
+		$url = home_url( '/login/' );
 	else
-		$url = esc_url( home_url( '/index.php?gp_action=login' ) );
+		$url = home_url( '/index.php?gp_action=login' );
 
 	if ( ! empty( $redirect ) )
 		$url = add_query_arg( 'redirect_to', urlencode( $redirect ), $url );
 
 	$url = set_url_scheme( $url, 'login_post' );
 
-	return apply_filters( 'gp_login_url', $url, $redirect );
+	return esc_url( apply_filters( 'gp_login_url', $url, $redirect ) );
 }
 
 
 function gp_profile_url() {
 	if ( '' != get_option('permalink_structure') )
-		$url = esc_url( home_url( '/profile/' ) );
+		$url = home_url( '/profile/' );
 	else
-		$url = esc_url( home_url( '/index.php?gp_action=profile' ) );
+		$url = home_url( '/index.php?gp_action=profile' );
 
-	return apply_filters( 'gp_profile_url', $url );
+	return esc_url( apply_filters( 'gp_profile_url', $url ) );
 }
 
 function gp_register_url() {
 	if ( '' != get_option('permalink_structure') )
-		$url = esc_url( home_url( '/register/' ) );
+		$url = home_url( '/register/' );
 	else
-		$url = esc_url( home_url( '/index.php?gp_action=register' ) );
+		$url = home_url( '/index.php?gp_action=register' );
 
-	return apply_filters( 'gp_register_url', $url );
+	return esc_url( apply_filters( 'gp_register_url', $url ) );
 }
 
 
@@ -141,36 +141,36 @@ function gp_register( $before = '', $after = '', $echo = true ) {
 
 function gp_projects_url() {
 	if ( '' != get_option('permalink_structure') )
-		$url = esc_url( home_url( '/projects/' ) );
+		$url = home_url( '/projects/' );
 	else
-		$url = esc_url( home_url( '/index.php?gp_action=projects' ) );
+		$url = home_url( '/index.php?gp_action=projects' );
 
-	return apply_filters( 'gp_projects_url', $url );
+	return esc_url( apply_filters( 'gp_projects_url', $url ) );
 }
 
 function gp_project_url( $project ) {
 	if ( '' != get_option('permalink_structure') )
-		$url = esc_url( home_url( '/projects/' . $project->path ) );
+		$url = home_url( '/projects/' . $project->path );
 	else
-		$url = esc_url( home_url( '/index.php?gp_project=' . $project->path ) );
+		$url = home_url( '/index.php?gp_project=' . $project->path );
 
-	return apply_filters( 'gp_project_url', $url, $project );
+	return esc_url( apply_filters( 'gp_project_url', $url, $project ) );
 }
 
 function gp_project_edit_url( $project ) {
 	if ( '' != get_option('permalink_structure') )
-		$url = esc_url( home_url( '/projects/' . $project->path . '/-edit' ) );
+		$url = home_url( '/projects/' . $project->path . '/-edit' );
 	else
-		$url = esc_url( home_url( '/index.php?gp_project=' . $project->path ) );
+		$url = home_url( '/index.php?gp_project=' . $project->path );
 
-	return apply_filters( 'gp_project_edit_url', $url, $project );
+	return esc_url( apply_filters( 'gp_project_edit_url', $url, $project ) );
 }
 
 function gp_project_new_url() {
 	if ( '' != get_option('permalink_structure') )
-		$url = esc_url( home_url( '/projects/-new' ) );
+		$url = home_url( '/projects/-new' );
 	else
-		$url = esc_url( home_url( '/index.php?gp_action=projects-new' ) );
+		$url = home_url( '/index.php?gp_action=projects-new' );
 
-	return apply_filters( 'gp_project_new_url', $url );
+	return esc_url( apply_filters( 'gp_project_new_url', $url ) );
 }
