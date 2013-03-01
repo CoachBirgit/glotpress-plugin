@@ -64,21 +64,32 @@ final class GlotPress {
 	 *
 	 * @since 0.1
 	 * @static var array $instance
-	 * @uses GlotPress::setup_globals() Setup the globals needed
-	 * @uses GlotPress::includes() Include the required files
-	 * @uses GlotPress::setup_actions() Setup the hooks and actions
 	 * @see glotpress()
 	 * @return The one true GlotPress
 	 */
 	public static function instance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new GlotPress;
-			self::$instance->setup_globals();
-			self::$instance->includes();
-			self::$instance->initialize_classes();
-			self::$instance->setup_actions();
+			add_action( 'plugins_loaded', array( self::$instance, 'init' ) );
 		}
 		return self::$instance;
+	}
+
+	/**
+	 * Start loading all GlotPress functionality after all plugins are loaded
+	 *
+	 * @since 0.1
+	 * @uses GlotPress::setup_globals() Setup the globals needed
+	 * @uses GlotPress::includes() Include the required files
+	 * @uses GlotPress::setup_actions() Setup the hooks and actions
+	 * @uses GlotPress::initialize_classes() Loads all classes
+	 * @see glotpress()
+	 */
+	public static function init() {
+		self::$instance->includes();
+		self::$instance->setup_globals();
+		self::$instance->initialize_classes();
+		self::$instance->setup_actions();
 	}
 
 	/** Magic Methods *********************************************************/
@@ -152,6 +163,7 @@ final class GlotPress {
 	 * @uses apply_filters() Calls various filters
 	 */
 	private function setup_globals() {
+		global $wpdb;
 
 		/** Versions **********************************************************/
 
@@ -185,6 +197,8 @@ final class GlotPress {
 
 		// Add GlotPress to global cache groups
 		wp_cache_add_global_groups( 'glotpress' );
+
+		GlotPress_Query::$prefix = apply_filters( 'gp_prefix', $wpdb->prefix );
 	}
 
 	/**
