@@ -1,7 +1,33 @@
 <?php
 
-function gp_breadcrumb() {
-	return apply_filters( 'gp_breadcrumb', '' );
+function gp_breadcrumb( $args = array() ) {
+	$defaults = array(
+		'separator' => '<span class="separator">'._x('&rarr;', 'breadcrumb').'</span>',
+		'breadcrumb_before' => '<span class="breadcrumb"><span class="separator">'._x('&rarr;', 'breadcrumb').'</span>',
+		'breadcrumb_after' => '</span>',
+	);
+	$args = array_merge( $defaults, $args );
+
+	$crumbs = array();
+
+	if( 'projects' == get_query_var( 'gp_action' ) )
+		$crumbs[] = __( 'Projects', 'glotpress' );
+	if( 'profile' == get_query_var( 'gp_action' ) )
+		$crumbs[] = __( 'Profile', 'glotpress' );
+	else if( 'login' == get_query_var( 'gp_action' ) )
+		$crumbs[] = __( 'Login', 'glotpress' );
+	else if( 'register' == get_query_var( 'gp_action' ) )
+		$crumbs[] = __( 'Register', 'glotpress' );
+
+	$crumbs = apply_filters( 'gp_breadcrumb_crumbs', $crumbs );
+
+	if( ! $crumbs )
+		return '';
+
+	$breadcrumb = implode( $args['separator'], array_filter( $crumbs ) );
+	$breadcrumb = $args['breadcrumb_before'] . $breadcrumb . $args['breadcrumb_after'];
+
+	return apply_filters( 'gp_breadcrumb', $breadcrumb );
 }
 
 function gp_limit_for_page() {
