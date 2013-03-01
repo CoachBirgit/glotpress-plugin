@@ -26,11 +26,12 @@ class GlotPress_Router {
 			'login/?$' => 'index.php?gp_action=login',
 			'register/?$' => 'index.php?gp_action=register',
 
+			"$projects/?$" => "index.php?gp_action=projects",
 			"$project/(import-originals|-edit|-delete|-personal|-permissions|-mass-create-sets|-mass-create-sets/preview|-new)/?$" => 'index.php?gp_project=$matches[1]&gp_action=$matches[2]',
-			"$projects/?$" => "index.php?gp_project=project&gp_action=index",
+			"$project/?$" => 'index.php?gp_project=$matches[1]',
+
 			"$set/(-bulk|import-translations|-discard-warning|-set-status|export-translations)/?$" => 'index.php?gp_project=$matches[1]&gp_locale=$matches[2]&gp_type=$matches[3]&gp_action=$matches[4]',
-			"$set/?$" => 'index.php?gp_set=set&gp_project=$matches[1]&gp_locale=$matches[2]&gp_type=$matches[3]',
-			"$project/?$" => 'index.php?gp_project=$matches[1]&gp_action=single'
+			"$set/?$" => 'index.php?gp_set=set&gp_project=$matches[1]&gp_locale=$matches[2]&gp_type=$matches[3]'
 		);
 		return apply_filters( 'gp_rewrite_rules', $new_rules + $current_rules );
 	}
@@ -61,8 +62,8 @@ class GlotPress_Router {
 		if( ! $query->is_main_query() )
 			return;
 
-		if( get_query_var( 'gp_project' ) ) {
-			
+		if( get_query_var( 'gp_project' ) && ! GlotPress_Query::projects() ) {
+			self::set_404( $query );
 		}
 		else if( 'login' == get_query_var( 'gp_action' ) && is_user_logged_in() ) {
 			self::set_404( $query );
@@ -82,6 +83,7 @@ class GlotPress_Router {
 	 */
 	function set_404( $query ) {
 		$query->set( 'gp_action', '' );
+		$query->set( 'gp_project', '' );
 		$query->set_404();
 		status_header( 404 );
 	}
@@ -92,17 +94,26 @@ class GlotPress_Router {
 	 * @since 0.1
 	 */
 	function template_include( $template ) {
+		if( get_query_var( 'gp_project' ) ) {
+			global $projects;
+			$projects = GlotPress_Query::projects();
+
+			$template = get_query_template( 'projects' );
+		}
 		if( 'profile' == get_query_var( 'gp_action' ) ) {
 			GlotPress_Profile::update_profile();
-			return get_stylesheet_directory() . '/profile.php';
+
+			$template = get_query_template( 'profile' );
 		}
 		else if( 'login' == get_query_var( 'gp_action' ) ) {
 			GlotPress_Login::check_login();
-			return get_stylesheet_directory() . '/login.php';
+
+			$template = get_query_template( 'login' );
 		}
 		else if( 'register' == get_query_var( 'gp_action' ) ) {
 			GlotPress_Login::check_register();
-			return get_stylesheet_directory() . '/register.php';
+
+			$template = get_query_template( 'register' );
 		}
 
 		return $template;

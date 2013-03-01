@@ -112,3 +112,39 @@ function gp_register( $before = '', $after = '', $echo = true ) {
 		return apply_filters( 'gp_register', $link );
 }
 
+
+function gp_projects_url() {
+	if ( '' != get_option('permalink_structure') )
+		$url = esc_url( home_url( '/projects/' ) );
+	else
+		$url = esc_url( home_url( '/index.php?gp_action=projects' ) );
+
+	return apply_filters( 'gp_projects_url', $url );
+}
+
+function gp_project_url( $project ) {
+	if ( '' != get_option('permalink_structure') )
+		$url = esc_url( home_url( '/projects/' . $project->path ) );
+	else
+		$url = esc_url( home_url( '/index.php?gp_project=' . $project->path ) );
+
+	return apply_filters( 'gp_project_url', $url, $project );
+}
+
+function gp_project_edit_url( $project ) {
+	if ( '' != get_option('permalink_structure') )
+		$url = esc_url( home_url( '/projects/' . $project->path . '/-edit' ) );
+	else
+		$url = esc_url( home_url( '/index.php?gp_project=' . $project->path ) );
+
+	return apply_filters( 'gp_project_edit_url', $url, $project );
+}
+
+function gp_project_new_url() {
+	if ( '' != get_option('permalink_structure') )
+		$url = esc_url( home_url( '/projects/-new' ) );
+	else
+		$url = esc_url( home_url( '/index.php?gp_action=projects-new' ) );
+
+	return apply_filters( 'gp_project_new_url', $url );
+}
