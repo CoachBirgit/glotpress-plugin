@@ -131,10 +131,14 @@ class GlotPress_Router {
 		if( ! $sep )
 			$sep = '&lt;';
 
+		if( 'projects' == get_query_var( 'gp_action' ) )
+			return __( 'Projects', 'glotpress' ) . ' ' . $sep . ' ' . get_bloginfo('name');
 		if( 'profile' == get_query_var( 'gp_action' ) )
 			return __( 'Profile', 'glotpress' ) . ' ' . $sep . ' ' . get_bloginfo('name');
 		else if( 'login' == get_query_var( 'gp_action' ) )
 			return __( 'Login', 'glotpress' ) . ' ' . $sep . ' ' . get_bloginfo('name');
+		else if( 'register' == get_query_var( 'gp_action' ) )
+			return __( 'Register', 'glotpress' ) . ' ' . $sep . ' ' . get_bloginfo('name');
 
 		return $title;
 	}
