@@ -61,15 +61,8 @@ class GlotPress_Router {
 		if( ! $query->is_main_query() )
 			return;
 
-		if( get_query_var( 'gp_set' ) ) {
-			return gp_set( get_query_var( 'gp_project' ),
-				get_query_var( 'gp_locale' ),
-				get_query_var( 'gp_type' ),
-				get_query_var( 'gp_action' ) );
-		}
-		elseif( get_query_var( 'gp_project' ) ) {
-			return gp_project( get_query_var( 'gp_project' ),
-				get_query_var( 'gp_action' ) );
+		if( get_query_var( 'gp_project' ) ) {
+			
 		}
 		else if( 'login' == get_query_var( 'gp_action' ) && is_user_logged_in() ) {
 			self::set_404( $query );
@@ -136,4 +129,3 @@ class GlotPress_Router {
 	}
 
 }
-?>
