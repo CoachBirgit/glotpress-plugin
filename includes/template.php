@@ -2,8 +2,8 @@
 
 function gp_breadcrumb( $args = array() ) {
 	$defaults = array(
-		'separator' => '<span class="separator">'._x('&rarr;', 'breadcrumb').'</span>',
-		'breadcrumb_before' => '<span class="breadcrumb"><span class="separator">'._x('&rarr;', 'breadcrumb').'</span>',
+		'separator' => '<span class="separator">' . _x( '&rarr;', 'breadcrumb', 'glotpress' ) . '</span>',
+		'breadcrumb_before' => '<span class="breadcrumb"><span class="separator">' . _x( '&rarr;', 'breadcrumb', 'glotpress' ) . '</span>',
 		'breadcrumb_after' => '</span>',
 	);
 	$args = array_merge( $defaults, $args );
