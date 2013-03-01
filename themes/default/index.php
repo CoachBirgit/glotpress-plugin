@@ -1,4 +1,2 @@
 <?php
-get_header();
-
-get_footer();
+wp_safe_redirect( gp_projects_url() );
