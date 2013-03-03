@@ -58,9 +58,12 @@ $parity = gp_parity_factory();
 <dl>
 <?php foreach( $project->sub_projects() as $sub_project ): ?>
 	<dt>
-		<a href="<?php echo gp_project_url( $sub_project ); ?>" title="Project: <?php echo esc_attr( $sub_project->name ); ?>"><?php echo esc_html( $sub_project->name );?></a>
+		<a href="<?php echo gp_project_url( $sub_project ); ?>" title="esc_attr( sprintf( __( 'Project: %s', 'glotpress' ), $sub_project->name ) ); ?>"><?php echo esc_html( $sub_project->name );?></a>
 		<?php echo gp_project_edit( $sub_project, __( 'Edit', 'glotpress' ), 'action edit bubble' ); ?>
-		<?php if ( $sub_project->active ) echo "<span class='active bubble'>Active</span>"; ?>
+		<?php
+			if ( $sub_project->active )
+				echo '<span class="active bubble">' . __( 'Active', 'glotpress' ) . '</span>';
+		?>
 	</dt>
 	<dd>
 		<?php echo esc_html( gp_html_excerpt( $sub_project->description, 111 ) ); ?>
@@ -129,15 +132,15 @@ $parity = gp_parity_factory();
 
 <script type="text/javascript" charset="utf-8">
 	$gp.showhide('a.personal-options', 'div.personal-options', {
-		show_text: 'Personal project options &darr;',
-		hide_text: 'Personal project options &uarr;',
+		show_text: '<?php _e( 'Personal project options', 'glotpress' ); ?> &darr;',
+		hide_text: '<?php _e( 'Personal project options', 'glotpress' ); ?> &uarr;',
 		focus: '#source-url-template',
 		group: 'personal'
 	});
 	jQuery('div.personal-options').hide();
 	$gp.showhide('a.project-actions', 'div.project-actions', {
-		show_text: 'Project actions &darr;',
-		hide_text: 'Project actions &uarr;',
+		show_text: '<?php _e( 'Project actions', 'glotpress' ); ?> &darr;',
+		hide_text: '<?php _e( 'Project actions', 'glotpress' ); ?> &uarr;',
 		focus: '#source-url-template',
 		group: 'project'
 	});

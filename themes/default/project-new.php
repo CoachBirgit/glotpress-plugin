@@ -6,8 +6,8 @@
 		<?php get_template_part('project-form'); ?>
 
 		<p>
-			<input type="submit" name="submit" value="<?php echo esc_attr( __('Create') ); ?>" id="submit" />
-			<span class="or-cancel">or <a href="javascript:history.back();">Cancel</a></span>
+			<input type="submit" name="submit" value="<?php esc_attr_e( 'Create', 'glotpress' ); ?>" id="submit" />
+			<span class="or-cancel">or <a href="<?php gp_projects_url(); ?>"><?php _e( 'Cancel', 'glotpress' ); ?></a></span>
 		</p>
 	</form>
 
