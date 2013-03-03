@@ -1655,6 +1655,19 @@ class GP_Locales {
 		$tuk->slug = 'tuk';
 		$tuk->nplurals = 2;
 		$tuk->plural_expression = '(n > 1)';
+                
+                $tt = new GP_Locale();
+		$tt->english_name = 'Tatar';
+		$tt->native_name = 'Татар теле';
+		$tt->lang_code_iso_639_1 = 'tt';
+		$tt->lang_code_iso_639_2 = 'tat';
+		$tt->country_code = 'tt';
+		$tt->wp_locale = 'tt_RU';
+		$tt->slug = 'tt';
+		$tt->google_code = 'tt';
+		$tt->facebook_locale = 'tt_RU';
+		$tt->nplurals = 3;
+		$tt->plural_expression = '(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)';
 
 		$udm = new GP_Locale();
 		$udm->english_name = 'Udmurt';
