@@ -101,9 +101,14 @@ class GlotPress_Router {
 	 * @since 0.1
 	 */
 	function template_include( $template ) {
-		if( get_query_var( 'gp_project' ) ) {
+		global $project;
+
+		if( $project = get_query_var( 'gp_project' ) ) {
+
 			if( get_query_var( 'gp_locale' ) )
 				$template = get_query_template( 'set' );
+			else if( '-edit' == get_query_var( 'gp_action' ) )
+				$template = get_query_template( 'project-edit' );
 			else
 				$template = get_query_template( 'project' );
 		}
