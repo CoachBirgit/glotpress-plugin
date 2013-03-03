@@ -4,13 +4,15 @@
  *
  * @package GlotPress
  * @subpackage GP-Default
- * @since 1.2
+ * @since 1.0
  */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 class GP_Default {
+	private $version = '1.0';
+
 	function __construct() {
 		// If GlotPress is not activated, switch back to the default WP theme and bail out
 		if ( ! function_exists( 'glotpress' ) ) {
@@ -33,11 +35,13 @@ class GP_Default {
 
 	function wp_enqueue_scripts() {
 		wp_enqueue_script( 'jquery' );
+
+		if( get_query_var( 'gp_project' ) )
+			wp_enqueue_script( 'gp-common', get_template_directory_uri() . '/js/common.js', array( 'jquery' ), $this->version );
 	}
 
 	function wp_enqueue_styles() {
-		$gp = glotpress();
-		wp_enqueue_style( 'glotpress', get_template_directory_uri() . '/css/style.css', array( ), $gp->version );
+		wp_enqueue_style( 'glotpress', get_template_directory_uri() . '/css/style.css', array(), $this->version );
 	}
 }
 

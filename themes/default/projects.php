@@ -6,7 +6,7 @@
 	<?php foreach( $projects as $project ): ?>
 		<li>
 			<a href="<?php echo gp_project_url( $project ); ?>" title="Project: <?php echo esc_attr( $project->name ); ?>"><?php echo esc_html( $project->name );?></a>
-			<a href="<?php echo gp_project_edit_url( $project ); ?>" class="action edit bubble"><?php _e( 'Edit', 'glotpress' ); ?></a>
+			<?php echo gp_project_edit( $project, __( 'Edit', 'glotpress' ), 'action edit bubble' ); ?>
 		</li>
 	<?php endforeach; ?>
 	</ul>

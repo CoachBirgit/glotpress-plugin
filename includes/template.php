@@ -10,9 +10,22 @@ function gp_breadcrumb( $args = array() ) {
 
 	$crumbs = array();
 
-	if( 'projects' == get_query_var( 'gp_action' ) )
+	if( $project = get_query_var( 'gp_project' ) ) {
+		$path_from_root = array_reverse( $project->path_to_root() );
+		// dvar_dump( $path_from_root );
+		$crumbs[] = '<a href="' . gp_projects_url() . '">' . __( 'Projects', 'glotpress' ) . '</a>';
+
+		foreach( $path_from_root as $project ) {
+			$crumbs[] = '<a href="' . gp_project_url( $project ) . '">' . esc_html( $project->name ) . '</a>';
+		}
+	}
+	else if( 'project' == get_query_var( 'gp_action' ) )
+		$crumbs[] = __( 'Create New Project', 'glotpress' );
+	else if( 'project-new' == get_query_var( 'gp_action' ) )
+		$crumbs[] = __( 'Create New Project', 'glotpress' );
+	else if( 'projects' == get_query_var( 'gp_action' ) )
 		$crumbs[] = __( 'Projects', 'glotpress' );
-	if( 'profile' == get_query_var( 'gp_action' ) )
+	else if( 'profile' == get_query_var( 'gp_action' ) )
 		$crumbs[] = __( 'Profile', 'glotpress' );
 	else if( 'login' == get_query_var( 'gp_action' ) )
 		$crumbs[] = __( 'Login', 'glotpress' );
@@ -29,6 +42,12 @@ function gp_breadcrumb( $args = array() ) {
 
 	return apply_filters( 'gp_breadcrumb', $breadcrumb );
 }
+
+
+function gp_project() {
+	return get_query_var( 'gp_project' );
+}
+
 
 function gp_limit_for_page() {
 	$per_page = false;
@@ -148,16 +167,27 @@ function gp_projects_url() {
 	return esc_url( apply_filters( 'gp_projects_url', $url ) );
 }
 
-function gp_project_url( $project ) {
-	if ( '' != get_option('permalink_structure') )
-		$url = home_url( '/projects/' . $project->path );
-	else
+function gp_project_url( $project, $action = '' ) {
+	if ( '' != get_option('permalink_structure') ) {
+		$url = home_url( trailingslashit( '/projects/' . $project->path ) );
+
+		if( $action )
+			$url .=  $action . '/';
+	}
+	else {
 		$url = home_url( '/index.php?gp_project=' . $project->path );
+
+		if( $action )
+			$url .=  '&gp_action=' . $action;
+	}
 
 	return esc_url( apply_filters( 'gp_project_url', $url, $project ) );
 }
 
 function gp_project_edit_url( $project ) {
+	if( ! $project )
+		return;
+
 	if ( '' != get_option('permalink_structure') )
 		$url = home_url( '/projects/' . $project->path . '/-edit' );
 	else
@@ -166,11 +196,64 @@ function gp_project_edit_url( $project ) {
 	return esc_url( apply_filters( 'gp_project_edit_url', $url, $project ) );
 }
 
-function gp_project_new_url() {
+function gp_project_new_url( $parent_id = '' ) {
 	if ( '' != get_option('permalink_structure') )
 		$url = home_url( '/projects/-new' );
 	else
-		$url = home_url( '/index.php?gp_action=projects-new' );
+		$url = home_url( '/index.php?gp_action=project-new' );
 
 	return esc_url( apply_filters( 'gp_project_new_url', $url ) );
+}
+
+function gp_translation_set_url( $project, $translation_set, $query = '' ) {
+	if( ! $translation_set )
+		return;
+
+	$project_url = gp_project_url( $project );
+
+	if ( '' != get_option('permalink_structure') )
+		$url = $project_url . $translation_set->locale . '/' . $translation_set->locale . '/';
+	else
+		$url = $project_url . '&gp_locale=' . $translation_set->locale . '&gp_type=' . $translation_set->locale;
+
+	return esc_url( apply_filters( 'gp_project_edit_url', $url, $translation_set ) );
+}
+
+
+
+
+function gp_project_edit( $project, $title = '', $class = 'action edit' ) {
+	if ( ! current_user_can( 'gp_project_edit', $project->id ) )
+		return '';
+
+	if( ! $title )
+		$title = '(' . __( 'edit', 'glotpress' ) . ')';
+
+	return '<a href="' . gp_project_edit_url( $project ) . '" class="' . $class . '">' . $title . '</a>';
+}
+
+
+function gp_html_excerpt( $str, $count, $ellipsis = '&hellip;') {
+	$excerpt = trim( wp_html_excerpt( $str, $count ) );
+
+	if ( $str != $excerpt )
+		$excerpt .= $ellipsis;
+
+	return $excerpt;
+}
+
+/**
+ * Returns a function, which returns the string "odd" or the string "even" alternatively.
+ */
+function gp_parity_factory() {
+	return create_function( '', 'static $parity = "odd"; if ($parity == "even") $parity = "odd"; else $parity = "even"; return $parity;');
+}
+
+function gp_map( $results, $class ) {
+	$mapped = array();
+
+	foreach( $results as $result )
+		$mapped[] = new $class( $result );
+
+	return $mapped;
 }

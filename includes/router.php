@@ -26,12 +26,14 @@ class GlotPress_Router {
 			'login/?$' => 'index.php?gp_action=login',
 			'register/?$' => 'index.php?gp_action=register',
 
+			"$projects/-new/?$" => "index.php?gp_action=project-new",
 			"$projects/?$" => "index.php?gp_action=projects",
-			"$project/(import-originals|-edit|-delete|-personal|-permissions|-mass-create-sets|-mass-create-sets/preview|-new)/?$" => 'index.php?gp_project=$matches[1]&gp_action=$matches[2]',
-			"$project/?$" => 'index.php?gp_project=$matches[1]',
 
 			"$set/(-bulk|import-translations|-discard-warning|-set-status|export-translations)/?$" => 'index.php?gp_project=$matches[1]&gp_locale=$matches[2]&gp_type=$matches[3]&gp_action=$matches[4]',
-			"$set/?$" => 'index.php?gp_set=set&gp_project=$matches[1]&gp_locale=$matches[2]&gp_type=$matches[3]'
+			"$set/?$" => 'index.php?gp_set=set&gp_project=$matches[1]&gp_locale=$matches[2]&gp_type=$matches[3]',
+
+			"$project/(import-originals|-edit|-delete|-personal|-permissions|-mass-create-sets|-mass-create-sets/preview)/?$" => 'index.php?gp_project=$matches[1]&gp_action=$matches[2]',
+			"$project/?$" => 'index.php?gp_project=$matches[1]'
 		);
 		return apply_filters( 'gp_rewrite_rules', $new_rules + $current_rules );
 	}
@@ -62,8 +64,13 @@ class GlotPress_Router {
 		if( ! $query->is_main_query() )
 			return;
 
-		if( 'projects' == get_query_var( 'gp_action' ) && ! GlotPress_Query::projects() ) {
-			self::set_404( $query );
+		if( get_query_var( 'gp_project' ) ) {
+			$project = new GP_Project( get_query_var( 'gp_project' ) );
+
+			if( $project )
+				$query->set( 'gp_project', $project );
+			else
+				self::set_404( $query );
 		}
 		else if( 'login' == get_query_var( 'gp_action' ) && is_user_logged_in() ) {
 			self::set_404( $query );
@@ -94,13 +101,22 @@ class GlotPress_Router {
 	 * @since 0.1
 	 */
 	function template_include( $template ) {
-		if( 'projects' == get_query_var( 'gp_action' ) ) {
+		if( get_query_var( 'gp_project' ) ) {
+			if( get_query_var( 'gp_locale' ) )
+				$template = get_query_template( 'set' );
+			else
+				$template = get_query_template( 'project' );
+		}
+		else if( 'project-new' == get_query_var( 'gp_action' ) ) {
+			$template = get_query_template( 'project-new' );
+		}
+		else if( 'projects' == get_query_var( 'gp_action' ) ) {
 			global $projects;
 			$projects = GlotPress_Query::projects();
 
 			$template = get_query_template( 'projects' );
 		}
-		if( 'profile' == get_query_var( 'gp_action' ) ) {
+		else if( 'profile' == get_query_var( 'gp_action' ) ) {
 			GlotPress_Profile::update_profile();
 
 			$template = get_query_template( 'profile' );
@@ -131,9 +147,15 @@ class GlotPress_Router {
 		if( ! $sep )
 			$sep = '&lt;';
 
-		if( 'projects' == get_query_var( 'gp_action' ) )
+		if( get_query_var( 'gp_project' ) ) {
+			$project = get_query_var( 'gp_project' );
+			return esc_html( $project->name ) . ' ' . $sep . ' ' . get_bloginfo('name');
+		}
+		else if( 'project-new' == get_query_var( 'gp_action' ) )
+			return __( 'Create New Project', 'glotpress' ) . ' ' . $sep . ' ' . get_bloginfo('name');
+		else if( 'projects' == get_query_var( 'gp_action' ) )
 			return __( 'Projects', 'glotpress' ) . ' ' . $sep . ' ' . get_bloginfo('name');
-		if( 'profile' == get_query_var( 'gp_action' ) )
+		else if( 'profile' == get_query_var( 'gp_action' ) )
 			return __( 'Profile', 'glotpress' ) . ' ' . $sep . ' ' . get_bloginfo('name');
 		else if( 'login' == get_query_var( 'gp_action' ) )
 			return __( 'Login', 'glotpress' ) . ' ' . $sep . ' ' . get_bloginfo('name');

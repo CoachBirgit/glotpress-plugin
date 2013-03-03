@@ -217,6 +217,9 @@ final class GlotPress {
 		require( $this->plugin_dir . 'includes/login.php' );
 
 		require( $this->plugin_dir . 'includes/profile.php' );
+
+		require( $this->plugin_dir . 'includes/project.php' );
+		require( $this->plugin_dir . 'includes/translation-set.php' );
 	}
 
 	/**
