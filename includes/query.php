@@ -61,10 +61,11 @@ class GlotPress_Query {
 		return $projects;
 	}
 
-	public function translation_set_counts( $project_id ) {
+	public function translation_set_counts( $set_id, $project_id ) {
 		global $wpdb;
 
 		$counts = wp_cache_get( $project_id, 'translation_set_status_breakdown' );
+		$counts = false;
 
 		if ( ! is_array( $counts ) ) {
 			/*
@@ -77,11 +78,11 @@ class GlotPress_Query {
 
 			$counts = $wpdb->get_results( $wpdb->prepare("
 				SELECT t.status as translation_status, COUNT(*) as n
-				FROM $t AS t INNER JOIN $o AS o ON t.original_id = o.id WHERE t.translation_set_id = %d AND o.status LIKE '+%%' GROUP BY t.status", $project_id ) );
+				FROM $t AS t INNER JOIN $o AS o ON t.original_id = o.id WHERE t.translation_set_id = %d AND o.status LIKE '+%%' GROUP BY t.status", $set_id ) );
 
 			$warnings_count = $wpdb->get_var( $wpdb->prepare("
 				SELECT COUNT(*) FROM $t AS t INNER JOIN $o AS o ON t.original_id = o.id
-				WHERE t.translation_set_id = %d AND o.status LIKE '+%%' AND (t.status = 'current' OR t.status = 'waiting') AND warnings IS NOT NULL", $project_id ) );
+				WHERE t.translation_set_id = %d AND o.status LIKE '+%%' AND (t.status = 'current' OR t.status = 'waiting') AND warnings IS NOT NULL", $set_id ) );
 
 			$all_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM $o WHERE project_id= %d AND status = '+active'", $project_id ) );
 

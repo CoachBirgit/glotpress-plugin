@@ -66,7 +66,7 @@ class GP_Translation_Set {
 
 
 	private function update_status_breakdown() {
-		$counts = GlotPress_Query::translation_set_counts( $this->project_id );
+		$counts = GlotPress_Query::translation_set_counts( $this->id, $this->project_id );
 
 		$statuses   = array('current', 'waiting', 'rejected', 'fuzzy', 'old', );  //GlotPress::$translation->get_static( 'statuses' );
 		$statuses[] = 'warnings';
