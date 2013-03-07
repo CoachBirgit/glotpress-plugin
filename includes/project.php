@@ -59,6 +59,8 @@ class GP_Project {
 	public function translation_sets() {
 		if( ! $this->translation_sets ) {
 			$translation_sets = GlotPress_Query::translation_set_by_project_id( $this->id );
+			$translation_sets = gp_map( $translation_sets, 'GP_Translation_Set' );
+
 			usort( $translation_sets, array( $this, 'translation_sets_sort' ) );
 
 			$this->translation_sets = gp_map( $translation_sets, 'GP_Translation_Set' );
@@ -68,7 +70,7 @@ class GP_Project {
 	}
 
 	private function translation_sets_sort( $a, $b ) {
-		return $a->current_count < $b->current_count;
+		return $a->current_count() < $b->current_count();
 	}
 
 
