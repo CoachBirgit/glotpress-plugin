@@ -65,7 +65,6 @@ class GlotPress_Query {
 		global $wpdb;
 
 		$counts = wp_cache_get( $project_id, 'translation_set_status_breakdown' );
-		$counts = false;
 
 		if ( ! is_array( $counts ) ) {
 			/*
